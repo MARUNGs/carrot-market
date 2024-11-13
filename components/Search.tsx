@@ -10,20 +10,20 @@ export default function Search() {
         xl:bg-orange-100
         2xl:bg-purple-100"
       >
-        <div className="md:flex-row gap-2 bg-white max-w-screen-sm w-full shadow-lg p-5 rounded-3xl flex flex-col">
+        <div
+          className="bg-white shadow-lg p-5 rounded-3xl w-full max-w-screen-sm flex flex-col md:flex-row gap-2 *:outline-none ring ring-transparent transition-shadow
+          has-[:invalid]:ring-red-100"
+        >
           <input
-            className="py-3 w-full rounded-full h-10 bg-gray-200 pl-5 outline-none
-              ring 
-              ring-transparent
-              focus:ring-orange-500 
-              focus:ring-offset-2 
-              transition-shadow
-              placeholder:drop-shadow"
-            type="text"
-            placeholder="Search here ..."
+            className="w-full rounded-full h-10 bg-gray-200 pl-5 ring ring-transparent focus:ring-green-500 focus:ring-offset-2 transition-shadow placeholder:drop-shadow invalid:focus:ring-red-500 peer"
+            type="email"
+            placeholder="Email address"
           />
-          <button className="md:px-10 bg-black bg-opacity-50 text-white py-2 rounded-full active:scale-90 transition-transform font-medium outline-none">
-            Search
+          <span className="text-red-500 font-medium hidden peer-invalid:block">
+            Email is Required.
+          </span>
+          <button className="text-white py-2 rounded-full active:scale-90  transition-transform font-medium  md:px-10 bg-black ">
+            Login
           </button>
         </div>
       </div>
