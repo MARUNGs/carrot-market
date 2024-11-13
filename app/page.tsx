@@ -1,7 +1,11 @@
+// import Card from "@/components/Card";
+import Search from "@/components/Search";
+
 export default function Home() {
   return (
     <>
-      <h1>Home</h1>
+      {/* <Card /> */}
+      <Search />
     </>
   );
 }
