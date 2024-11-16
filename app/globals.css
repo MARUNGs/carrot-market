@@ -1,3 +1,24 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* directive */
+@tailwind base; /*컴파일러가 테일윈드와 함께 제공되는 기본스타일 종류는 보관함. 테일윈드가 생성하는 기본적인 reset 및 기본값의 일종이라고 보면 된다.*/
+@tailwind components; /*components layer를 삽입한다.*/
+@tailwind utilities; /*w-10 h-96 등의 className은 여기로 삽입됨*/
+
+/* @layer : 각 설정하는 영역을 확장할 수 있음. */
+
+@layer base {
+  a {
+    @apply text-stone-600;
+  }
+}
+
+@layer utilities {
+  .text-bigger-hello {
+    @apply text-3xl font-semibold;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply w-full text-white bg-black h-10 rounded-sexy-name me-tomato;
+  }
+}
