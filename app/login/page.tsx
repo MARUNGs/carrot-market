@@ -13,7 +13,17 @@ export default function Login() {
     // Server Action으로 선언한 함수는 기본적으로 파라미터에 FormData를 받을 수 있다. (타입 중요)
     // 그 상태에서 매핑되는 key값(input의 name)을 get()함수로 호출하여 가져올 수 있다.
     console.log(formData.get("email"), formData.get("password"));
+
+    // Q. Server Action의 경과가 얼마나 걸릴까?
+    // A. 사용자는 알 수 없다. 따라서 Server Action의 작업이 좀 걸린다는 것을 알려줘야 한다.
+    //    ReactJS hook 이용: useFormStatus
   };
+
+  // 여러가지 속성 중, 'pending'은 함수가 끝난 여부를 상태로 알려주는 속성이다.
+  // 단, useFormStatus 훅은 action을 실행하는 form과 같은 영역에서 사용할 수 없다.
+  // 반드시 form의 상태에 따라 변경하고자 하는 component 내부에서만 사용이 가능하다.
+  // const { pending } = useFormStatus();
+  // useFormStatus는 자동으로 부모 요소를 찾게 된다. (form)
 
   return (
     <div className="flex flex-col gap-10 py-8 px-6">
@@ -28,16 +38,16 @@ export default function Login() {
           type="email"
           placeholder="Email"
           required
-          errors={["plz check email"]}
+          errors={[]}
         />
         <FormInput
           name="password"
           type="password"
           placeholder="password"
           required
-          errors={["plz check password"]}
+          errors={[]}
         />
-        <FormButton loading={false} text="Create Account" />
+        <FormButton text="Login" />
       </form>
 
       <SocialLogin />
