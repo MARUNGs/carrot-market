@@ -15,13 +15,13 @@ export default function SmsLogin() {
             type="number"
             placeholder="phone number"
             required
-            errors={[""]}
+            errors={[]}
           />
           <FormInput
             type="number"
             placeholder="verification code"
             required
-            errors={[""]}
+            errors={[]}
           />
           <FormButton loading={false} text="Send the message" />
         </form>
