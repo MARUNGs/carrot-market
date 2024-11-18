@@ -7,7 +7,7 @@
 
 @layer base {
   a {
-    @apply text-stone-600;
+    @apply text-orange-500;
   }
 }
 
@@ -17,8 +17,11 @@
   }
 }
 
+/* 공통 컴포넌트 className 및 테일윈드CSS 설정 */
 @layer components {
-  .btn {
-    @apply w-full text-white bg-black h-10 rounded-sexy-name me-tomato;
+  .primary-btn {
+    @apply w-full bg-orange-500 text-white
+    font-medium rounded-md text-center
+    hover:bg-orange-400 transition-colors;
   }
 }
