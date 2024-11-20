@@ -5,7 +5,6 @@ import { redirect } from "next/navigation";
 // Server Action
 export async function onSubmit(prevState: any, formData: FormData) {
   // Server Action이 이전에 반환했던 값이 prevState로 매핑된다.
-  console.log(prevState);
 
   /*
     이 함수 내에서만 서버 역할을 하게 된다. 무조건 비동기 함수에서만 사용이 가능하다.

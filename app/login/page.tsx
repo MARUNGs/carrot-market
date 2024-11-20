@@ -1,6 +1,6 @@
 "use client";
-import FormInput from "@/components/form-input";
-import FormButton from "@/components/form-button";
+import FormInput from "@/components/Input";
+import FormButton from "@/components/Button";
 import SocialLogin from "@/components/social-login";
 import { useFormState } from "react-dom";
 import { onSubmit } from "./actions";
@@ -18,7 +18,6 @@ export default function Login() {
       마찬가지로, useState 훅과 비슷한 것처럼 두번째 인자로 기본값을 필수로 초기화해줘야 한다.
     */
   const [state, action] = useFormState(onSubmit, null);
-  console.log(state);
 
   /*
     Q. Server Action의 경과가 얼마나 걸릴까?
