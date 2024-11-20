@@ -66,7 +66,7 @@ const formSchema = z
     path: ["passwordConfirm"], // 어느 항목의 오류인가?를 설정하는 prop
   });
 
-export async function createAccount(prevState: any, formData: FormData) {
+export async function createAccount(_: any, formData: FormData) {
   const data = {
     username: formData.get("username"),
     email: formData.get("email"),

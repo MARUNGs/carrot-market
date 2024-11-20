@@ -23,7 +23,7 @@ const formSchema = z.object({
 });
 
 // Server Action
-export async function login(prevState: any, formData: FormData) {
+export async function login(_: any, formData: FormData) {
   // Server Action이 이전에 반환했던 값이 prevState로 매핑된다.
 
   const data = {

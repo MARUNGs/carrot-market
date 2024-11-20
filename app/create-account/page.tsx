@@ -7,7 +7,7 @@ import { createAccount } from "./actions";
 import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 
 export default function CreateAccount() {
-  const [state, action] = useFormState(createAccount, null);
+  const [state, dispatch] = useFormState(createAccount, null);
 
   return (
     <>
@@ -16,7 +16,7 @@ export default function CreateAccount() {
           <h1 className="text-2xl">Hi!</h1>
           <h2 className="text-xl">Fill in the form below to join!</h2>
         </div>
-        <form action={action} className="flex flex-col gap-3">
+        <form action={dispatch} className="flex flex-col gap-3">
           {/* custom input */}
           <Input
             name="username"
