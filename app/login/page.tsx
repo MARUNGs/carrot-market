@@ -1,9 +1,10 @@
 "use client";
-import FormInput from "@/components/Input";
-import FormButton from "@/components/Button";
+import Input from "@/components/Input";
+import Button from "@/components/Button";
 import SocialLogin from "@/components/social-login";
 import { useFormState } from "react-dom";
-import { onSubmit } from "./actions";
+import { login } from "./actions";
+import { PASSWORD_MIN_LENGTH } from "@/lib/constants";
 
 export default function Login() {
   /*
@@ -17,7 +18,7 @@ export default function Login() {
       useState 훅이랑 비슷함.
       마찬가지로, useState 훅과 비슷한 것처럼 두번째 인자로 기본값을 필수로 초기화해줘야 한다.
     */
-  const [state, action] = useFormState(onSubmit, null);
+  const [state, action] = useFormState(login, null);
 
   /*
     Q. Server Action의 경과가 얼마나 걸릴까?
@@ -41,14 +42,22 @@ export default function Login() {
       {/* Server Action 자체를 설정하면 내부오류를 알 수 없을 것이다. useFormState의 트리거를 넣어주어야 한다. */}
       <form action={action} className="flex flex-col gap-3">
         {/* custom input */}
-        <FormInput name="email" type="email" placeholder="Email" required />
-        <FormInput
+        <Input
+          name="email"
+          type="email"
+          placeholder="Email"
+          required
+          errors={state?.fieldErrors.email}
+        />
+        <Input
           name="password"
           type="password"
           placeholder="password"
           required
+          minLength={PASSWORD_MIN_LENGTH}
+          errors={state?.fieldErrors.password}
         />
-        <FormButton text="Login" />
+        <Button text="Login" />
       </form>
 
       <SocialLogin />
