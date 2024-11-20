@@ -4,7 +4,7 @@ interface IFormInputProps {
   name: string;
   placeholder: string;
   required: boolean;
-  errors: string[];
+  errors?: string[];
 }
 
 export default function FormInput({
@@ -24,7 +24,7 @@ export default function FormInput({
         required={required}
       />
 
-      {errors.map((error, i) => (
+      {errors?.map((error, i) => (
         <span key={i} className="text-red-500 font-medium">
           {error}
         </span>

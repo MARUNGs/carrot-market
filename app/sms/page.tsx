@@ -25,7 +25,7 @@ export default function SmsLogin() {
             required
             errors={[]}
           />
-          <FormButton loading={false} text="Send the message" />
+          <FormButton text="Send the message" />
         </form>
       </div>
     </>
