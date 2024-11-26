@@ -10,6 +10,7 @@ import bcrypt from "bcrypt";
 import { getIronSession } from "iron-session";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import getSession from "@/lib/session";
 
 // Prisma Client 초기화
 const db = new PrismaClient();
@@ -160,16 +161,7 @@ export async function createAccount(_: any, formData: FormData) {
       select: { id }, // 생성된 유저의 id만 호출
     });
 
-    // 사용자 로그인 처리
-    // 초기설정: 쿠키명 설정 (암복호화 양방향 가능)
-    const session = await getIronSession(cookies(), {
-      cookieName: "delicious-karrot",
-      // 쿠키 패스워드는 github에 기록이 남으면 안 되므로 .env 환경설정 파일에서 관리하도록 하자.
-      // 느낌표 의미: 타입스크립트에게 .env안에 COOKIE_PASSWORD 변수가 무조건 존재한다는 의미
-      password: process.env.COOKIE_PASSWORD!,
-    });
-
-    // @ts-ignore
+    const session = await getSession(); // session 호출
     session.id = user.id;
     await session.save();
 
