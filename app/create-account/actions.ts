@@ -7,17 +7,18 @@ import {
 } from "@/lib/constants";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import { getIronSession } from "iron-session";
-import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import getSession from "@/lib/session";
 
-// Prisma Client 초기화
-const db = new PrismaClient();
+const db = new PrismaClient(); // Prisma Client 초기화
 
-// 1개의 유효성 검사
-// const usernameSchema = z.string().min(5).max(10);
+// const usernameSchema = z.string().min(5).max(10); // 1개의 유효성 검사
 
+/**
+ * username을 체크한다. potato 문자열은 삽입금지
+ * @param username
+ * @returns
+ */
 function checkUsername(username: string): boolean {
   return !username.includes("potato");
 }
@@ -27,47 +28,12 @@ interface IPasswordProps {
   passwordConfirm: string;
 }
 
+/**
+ * 비밀번호 && 비밀번호 확인 체크
+ */
 function checkPassword({ password, passwordConfirm }: IPasswordProps): boolean {
   return password === passwordConfirm;
 }
-
-/**
- * [DB check 1. username]
- * refine에 사용 가능
- * DB에 해당 name이 존재하는지 확인 (unique)
- * @param username
- * @returns
- */
-const chkUniqueUsername = async (username: string) => {
-  const user = await db.user.findUnique({
-    where: {
-      name: username,
-    },
-    // select: 조회한 정보 중, 필요한 것만 조회가능.
-    select: {
-      id: true,
-    },
-  });
-
-  return !Boolean(user); // user가 있으면 false, 없으면 true
-};
-
-/**
- * [DB check 1. username]
- * refine에 사용 가능
- * DB에 해당 email이 존재하는지 확인 (unique)
- * @param email
- * @returns
- */
-const chkUniqueEmail = async (email: string) => {
-  const id = true;
-  const user = await db.user.findUnique({
-    where: { email },
-    select: { id },
-  });
-
-  return !Boolean(user);
-};
 
 // 객체의 유효성 검사
 const formSchema = z
@@ -80,16 +46,14 @@ const formSchema = z
       .toLowerCase()
       .trim()
       // .transform((username) => `🔥${username}🔥`)
-      .refine(checkUsername, `특정 단어가 입력되어서는 안 됩니다.`)
-      .refine(chkUniqueUsername, `해당 username은 이미 존재합니다.`),
+      .refine(checkUsername, `특정 단어가 입력되어서는 안 됩니다.`),
     email: z
       .string({
         invalid_type_error: "이메일은 문자로 작성해야 합니다.",
         required_error: "이메일은 필수입력입니다.",
       })
       .toLowerCase()
-      .email()
-      .refine(chkUniqueEmail, `해당 email은 이미 존재합니다.`),
+      .email(),
     password: z
       .string({
         invalid_type_error: "비밀번호는 문자로 작성해야 합니다.",
@@ -109,6 +73,42 @@ const formSchema = z
         PASSWORD_MIN_LENGTH,
         `비밀번호 확인은 최소 ${PASSWORD_MIN_LENGTH}자 이상이어야 합니다.`
       ),
+  })
+  // 여기서 username 변수는 현재 유효성검사중인 object 내 key값들이다. username, email, password 등
+  .superRefine(async ({ username }, ctx) => {
+    const user = await db.user.findUnique({
+      where: { name: username },
+      select: { id: true },
+    });
+
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "사용자명이 이미 사용중입니다.",
+        path: ["username"],
+        fatal: true, // 해당 이슈는 치명적이다. 라고 정의하는 속성
+      });
+
+      return z.NEVER; // zod가 한 항목만 검사하고 나머지는 하지 않게 설정할 수 있다.
+      // fatal이 true이면서 zod.NEVER이 리턴되면 다른 refine 함수는 실행되지 않는다.
+    }
+  })
+  .superRefine(async ({ email }, ctx) => {
+    const user = await db.user.findUnique({
+      where: { email },
+      select: { id: true },
+    });
+
+    if (user) {
+      ctx.addIssue({
+        code: "custom",
+        message: "email이 이미 사용중입니다.",
+        path: ["email"],
+        fatal: true,
+      });
+
+      return z.NEVER;
+    }
   })
   .refine(checkPassword, {
     message: "비밀번호와 비밀번호 확인이 서로 일치하지 않습니다.",
