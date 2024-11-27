@@ -3,24 +3,31 @@
  * 즉, middleware는 내가 원하는 모든 request를 가로챌 수 있다.
  */
 import { NextRequest, NextResponse } from "next/server";
+import getSession from "./lib/session";
 
-/**
- * function name : middleware 반드시 고정
- * @param request
- * @returns
- */
+// public으로 접근 가능한 url
+// const publicOnlyUrls: Routes = {
+//   // array보다 object로 관리하는게 검색속도가 더 낫다.
+//   "/": true,
+//   "/login": true,
+//   "/sms": true,
+//   "/create-account": true,
+// };
+const publicOnlyUrls = new Set(["/", "/login", "/sms", "/create-account"]);
+
 export async function middleware(request: NextRequest) {
-  // 여기서 로그인여부를 확인할 수 있다...!
-  const pathname = request.nextUrl.pathname;
+  const { pathname } = request.nextUrl; // 사용자가 가려는 다음 url
+  const { url } = request;
+  const session = await getSession();
+  const exists = publicOnlyUrls.has(pathname); // const exists = publicOnlyUrls[pathname];
 
-  if (pathname === "/") {
-    const response = NextResponse.next(); // user에게 제공할 응답을 전해줌
-    response.cookies.set("middleware-cookie", "hello!");
-    return response;
+  if (!session.id && !exists) {
+    return NextResponse.redirect(new URL("/", url));
   }
 
-  if (pathname === "/profile") {
-    return Response.redirect(new URL("/", request.url));
+  // 이미 로그인한 상태이므로 publicOnlyUrls로 갈수없게 막아야 한다.
+  if (session.id && exists) {
+    return NextResponse.redirect(new URL("/products", url));
   }
 }
 
