@@ -5,22 +5,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import getSession from "./lib/session";
 
-// public으로 접근 가능한 url
-// const publicOnlyUrls: Routes = {
-//   // array보다 object로 관리하는게 검색속도가 더 낫다.
-//   "/": true,
-//   "/login": true,
-//   "/sms": true,
-//   "/create-account": true,
-// };
 const publicOnlyUrls = new Set(["/", "/login", "/sms", "/create-account"]);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl; // 사용자가 가려는 다음 url
   const { url } = request;
   const session = await getSession();
-  const exists = publicOnlyUrls.has(pathname); // const exists = publicOnlyUrls[pathname];
+  const exists = publicOnlyUrls.has(pathname);
 
+  // 로그인하지 않은 유저이면서 허용되지 않은 url로 접근했을 때 '/'로 이동
   if (!session.id && !exists) {
     return NextResponse.redirect(new URL("/", url));
   }
