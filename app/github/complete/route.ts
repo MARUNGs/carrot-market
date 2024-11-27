@@ -1,13 +1,13 @@
 import db from "@/lib/db";
-import { getAccessToken, getGithubEmail, getGithubProfile } from "@/lib/github";
+import * as github from "@/app/github/complete/github";
 import { userLogin } from "@/lib/login";
 import { NextRequest } from "next/server";
 
 // github에서 보낸 임시 code parameter를 호출해야 함.
 export async function GET(request: NextRequest) {
-  const access_token = await getAccessToken(request);
-  const { id, avatar_url, login } = await getGithubProfile(access_token);
-  const email = await getGithubEmail(access_token);
+  const access_token = await github.getAccessToken(request);
+  const { id, avatar_url, login } = await github.getGithubProfile(access_token);
+  const email = await github.getGithubEmail(access_token);
 
   // 해당 Github 계정이 DB에 존재하는지 확인
   const user = await db.user.findUnique({
