@@ -5,7 +5,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import getSession from "./lib/session";
 
-const publicOnlyUrls = new Set(["/", "/login", "/sms", "/create-account"]);
+const publicOnlyUrls = new Set([
+  "/",
+  "/login",
+  "/sms",
+  "/create-account",
+  "/github/start",
+  "/github/complete",
+]);
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl; // 사용자가 가려는 다음 url
