@@ -90,13 +90,8 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
         data: {
           token,
           user: {
-            // 해당 phone을 가진 user가 존재하는지 알 수 없다. 따라서 connectOrCreate를 사용함.
             connectOrCreate: {
-              // phone을 찾고
-              where: {
-                phone: result.data,
-              },
-              // update할 유저가 없으면 생성한다.
+              where: { phone: result.data },
               create: {
                 name: crypto.randomBytes(10).toString("hex"),
                 phone: result.data,
@@ -113,6 +108,8 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
         process.env.TWILIO_AUTH_TOKEN
       );
 
+      /*
+      20241128. 오류... twilio에서 자체적으로 인증이 안되고 있는 이슈가 있다. 원인을 아직 못찾아서 주석처리함.
       // 2. client로 메세지를 생성한다.
       await client.messages.create({
         body: `당신의 캐럿마켓 인증코드는 ${token}입니다.`,
@@ -120,6 +117,10 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
         to: process.env.MY_PHONE!, // 받는이(나)
         // 원래는 to의 번호는 사용자가 입력한 전화번호여야 하지만, 현재 twilio 계정이 체험판이므로 제공받은 번호로 사용할 것.
       });
+      */
+      console.log(client);
+      console.log(token);
+      // 해결되기 전까지만 임시로 처리해보도록 하자...
 
       return { token: true };
     }
@@ -134,8 +135,12 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
       };
     } else {
       // token을 갖는 userId 찾기
+      // 개선. 사용자가 전화번호를 아무렇게나 작성하고 token 인증을 요청할 수도 있다.
+      // 이를 방지하기 위한 전화번호 검토가 필요하다. 결과값이 확인되면 token 조회시 phone도 같이 조회할 것.
       const token = await db.sMSToken.findUnique({
-        where: { token: result.data.toString() },
+        where: {
+          token: result.data.toString(),
+        },
         select: { id: true, userId: true },
       });
 
