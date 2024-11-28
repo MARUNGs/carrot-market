@@ -6,6 +6,7 @@ import db from "@/lib/db";
 import crypto from "crypto";
 import { userLogin } from "@/lib/login";
 import twilio from "twilio";
+import { sendMessage } from "../discord/server";
 
 // phone 먼저 검사한 뒤에 token을 검사할 것이므로 object()로 감쌀 필요가 없다.
 
@@ -121,6 +122,9 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
       console.log(client);
       console.log(token);
       // 해결되기 전까지만 임시로 처리해보도록 하자...
+
+      // 대신 디스코드로 문자를 전송해보자...
+      await sendMessage(token);
 
       return { token: true };
     }
