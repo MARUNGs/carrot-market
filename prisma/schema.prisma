@@ -19,6 +19,7 @@ model User {
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt // @updatedAt: 사용자가 수정될때마다 수정시간을 부여해줄 것임.
   SMSToken   SMSToken[]
+  Product    Product[]
 }
 
 // 사용자 - 토큰 연결 필요(phone으로 토큰값을 전달을 주고받아야 하기 때문)
@@ -33,4 +34,16 @@ model SMSToken {
   // Cascade: User 삭제 시, 연관된 SMSTokem 데이터 또한 삭제
   user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId     Int // 실제DB에서는 이 값이 저장됨
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  title       String
+  price       Float
+  description String
+  photo       String // image는 클라우드에 업로드하고 url string을 저장할 것임.
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
 }
