@@ -5,6 +5,7 @@ import { MAX_NUMBER, MIN_NUMBER } from "@/lib/constants";
 import db from "@/lib/db";
 import crypto from "crypto";
 import { userLogin } from "@/lib/login";
+import twilio from "twilio";
 
 // phone 먼저 검사한 뒤에 token을 검사할 것이므로 object()로 감쌀 필요가 없다.
 
@@ -106,6 +107,19 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
       });
 
       // twilio를 이용하여 사용자에게 token을 전달한다.
+      // 1. twilio client 생성
+      const client = twilio(
+        process.env.TWILIO_ACCOUNT_SID,
+        process.env.TWILIO_AUTH_TOKEN
+      );
+
+      // 2. client로 메세지를 생성한다.
+      await client.messages.create({
+        body: `당신의 캐럿마켓 인증코드는 ${token}입니다.`,
+        from: process.env.TWILIO_PHONE_NUMBER!, // 보내는이(twilio 번호)
+        to: process.env.MY_PHONE!, // 받는이(나)
+        // 원래는 to의 번호는 사용자가 입력한 전화번호여야 하지만, 현재 twilio 계정이 체험판이므로 제공받은 번호로 사용할 것.
+      });
 
       return { token: true };
     }
@@ -135,3 +149,7 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
     }
   }
 }
+
+// 코드 챌린지
+// 1. 사용자에게 토큰을 넘겼을때, 사용자가 본인과 관련없는 전화번호를 아무거나 적었을 수도 있으니
+//    OTP 번호를 추적하여 확인해볼 것.
