@@ -1,3 +1,15 @@
+export interface IUser {
+  name: string;
+  email: string;
+  password: string;
+}
+
+// password
+export interface IPasswordProps {
+  password: string;
+  passwordConfirm: string;
+}
+
 // 폼 에러 타입 정의
 interface FormErrors {
   fieldErrors: {

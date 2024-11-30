@@ -1,35 +1,69 @@
 // Prisma Client 호출
+import { IUser } from "@/app/types/ParamsInterface";
+import { IUserResult } from "@/app/types/ReturnInterface";
 import { PrismaClient } from "@prisma/client";
 
 // Prisma Client 초기화
 const db = new PrismaClient();
 
-async function test() {
-  /*
-  const token = await db.sMSToken.create({
-    data: {
-      token: "1234",
-      user: {
-        connect: { id: 2 },
-      },
-    },
+/**
+ * [회원가입] username 조회
+ * @param username
+ * @returns
+ */
+export async function findUser(username: string): Promise<IUserResult> {
+  const user = await db.user.findUnique({
+    where: { name: username },
+    select: { id: true },
   });
-  */
 
-  // 토큰찾기
-  const token = await db.sMSToken.findUnique({
-    where: {
-      id: 1,
-      userId: 2,
-    },
-    // include: 관계를 포함하는 데 사용
-    include: {
-      user: true,
-    },
-  });
-  console.log(token);
+  const result = {
+    success: Boolean(user) ? true : false,
+    data: user,
+  };
+
+  return result;
 }
-test();
+
+/**
+ * [회원가입] email 조회
+ * @param email
+ * @returns
+ */
+export async function findEmail(email: string): Promise<IUserResult> {
+  const user = await db.user.findUnique({
+    where: { email },
+    select: { id: true },
+  });
+
+  const result = {
+    success: Boolean(user) ? true : false,
+    data: user,
+  };
+
+  return result;
+}
+
+/**
+ * [회원가입] 유저 생성
+ * @param data
+ * @returns
+ */
+export async function createUser(data: IUser): Promise<IUserResult> {
+  const createUser = await db.user.create({
+    data,
+    select: { id: true },
+  });
+
+  const result = {
+    success: Boolean(createUser) ? true : false,
+    data: createUser,
+  };
+
+  return result;
+}
+
+/*************************************************************/
 
 /**
  * [상품페이지] 상품리스트 조회

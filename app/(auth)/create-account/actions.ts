@@ -5,13 +5,11 @@ import {
   // PASSWORD_REGEX,
   // PASSWORD_REGEX_ERROR,
 } from "@/lib/constants";
-import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import getSession from "@/lib/session";
-import { PrevState } from "@/app/types/interface";
-
-const db = new PrismaClient(); // Prisma Client 초기화
+import { IPasswordProps, PrevState } from "@/app/types/ParamsInterface";
+import { createUser, findEmail, findUser } from "@/lib/db";
 
 // const usernameSchema = z.string().min(5).max(10); // 1개의 유효성 검사
 
@@ -22,11 +20,6 @@ const db = new PrismaClient(); // Prisma Client 초기화
  */
 function checkUsername(username: string): boolean {
   return !username.includes("potato");
-}
-
-interface IPasswordProps {
-  password: string;
-  passwordConfirm: string;
 }
 
 /**
@@ -77,12 +70,9 @@ const formSchema = z
   })
   // 여기서 username 변수는 현재 유효성검사중인 object 내 key값들이다. username, email, password 등
   .superRefine(async ({ username }, ctx) => {
-    const user = await db.user.findUnique({
-      where: { name: username },
-      select: { id: true },
-    });
+    const result = await findUser(username);
 
-    if (user) {
+    if (!result.success) {
       ctx.addIssue({
         code: "custom",
         message: "사용자명이 이미 사용중입니다.",
@@ -95,12 +85,9 @@ const formSchema = z
     }
   })
   .superRefine(async ({ email }, ctx) => {
-    const user = await db.user.findUnique({
-      where: { email },
-      select: { id: true },
-    });
+    const result = await findEmail(email);
 
-    if (user) {
+    if (!result.success) {
       ctx.addIssue({
         code: "custom",
         message: "email이 이미 사용중입니다.",
@@ -152,18 +139,14 @@ export async function createAccount(_: PrevState, formData: FormData) {
     const hashPassword = await bcrypt.hash(result.data.password, 12); // hashing 12번 실행
 
     // 사용자 정보 DB에 저장
-    const id = true;
-    const user = await db.user.create({
-      data: {
-        name: result.data.username,
-        email: result.data.email,
-        password: hashPassword,
-      },
-      select: { id }, // 생성된 유저의 id만 호출
+    const user = await createUser({
+      name: result.data.username,
+      email: result.data.email,
+      password: hashPassword,
     });
 
     const session = await getSession(); // session 호출
-    session.id = user.id;
+    session.id = user.data.id;
     await session.save();
 
     // '/profile' 으로 이동

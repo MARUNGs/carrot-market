@@ -1,4 +1,4 @@
-import { IProduct } from "@/app/types/interface";
+import { IProduct } from "@/app/types/ParamsInterface";
 
 export default function ProductList({ ...props }: IProduct) {
   console.log(props);

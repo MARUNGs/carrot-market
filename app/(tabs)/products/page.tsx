@@ -1,4 +1,4 @@
-import { IProduct } from "@/app/types/interface";
+import { IProduct } from "@/app/types/ParamsInterface";
 import ProductList from "@/components/ProductList";
 import { findProducts } from "@/lib/db";
 

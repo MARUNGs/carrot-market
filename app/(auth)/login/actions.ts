@@ -15,7 +15,7 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
-import { PrevState } from "@/app/types/interface";
+import { PrevState } from "@/app/types/ParamsInterface";
 
 /**
 	비밀번호 체크
