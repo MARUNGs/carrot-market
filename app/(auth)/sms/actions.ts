@@ -109,16 +109,15 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
         process.env.TWILIO_AUTH_TOKEN
       );
 
-      /*
-      20241128. 오류... twilio에서 자체적으로 인증이 안되고 있는 이슈가 있다. 원인을 아직 못찾아서 주석처리함.
+      // 20241128. 오류... twilio에서 자체적으로 인증이 안되고 있는 이슈가 있다. 원인을 아직 못찾아서 주석처리함.
       // 2. client로 메세지를 생성한다.
-      await client.messages.create({
-        body: `당신의 캐럿마켓 인증코드는 ${token}입니다.`,
-        from: process.env.TWILIO_PHONE_NUMBER!, // 보내는이(twilio 번호)
-        to: process.env.MY_PHONE!, // 받는이(나)
-        // 원래는 to의 번호는 사용자가 입력한 전화번호여야 하지만, 현재 twilio 계정이 체험판이므로 제공받은 번호로 사용할 것.
-      });
-      */
+      // await client.messages.create({
+      //   body: `당신의 캐럿마켓 인증코드는 ${token}입니다.`,
+      //   from: process.env.TWILIO_PHONE_NUMBER!, // 보내는이(twilio 번호)
+      //   to: process.env.MY_PHONE!, // 받는이(나)
+      //   // 원래는 to의 번호는 사용자가 입력한 전화번호여야 하지만, 현재 twilio 계정이 체험판이므로 제공받은 번호로 사용할 것.
+      // });
+
       console.log(client);
       console.log(token);
       // 해결되기 전까지만 임시로 처리해보도록 하자...

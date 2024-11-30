@@ -1,14 +1,17 @@
-async function getProducts() {
-  await new Promise((resolve) => setTimeout(resolve, 10000));
-}
+import { IProduct } from "@/app/types/interface";
+import ProductList from "@/components/ProductList";
+import { findProducts } from "@/lib/db";
 
+// main func
 export default async function Product() {
-  const products = await getProducts();
-  console.log(products);
+  const products = await findProducts();
 
   return (
     <div>
-      <h1 className="text-white text-4xl">Product!</h1>
+      {products.success &&
+        products.data.map((product: IProduct) => (
+          <ProductList key={product.id} {...product} />
+        ))}
     </div>
   );
 }

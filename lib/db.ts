@@ -31,6 +31,29 @@ async function test() {
 }
 test();
 
+/**
+ * [상품페이지] 상품리스트 조회
+ * @returns
+ */
+export async function findProducts() {
+  const products = await db.product.findMany({
+    select: {
+      id: true,
+      title: true,
+      price: true,
+      created_at: true,
+      photo: true,
+    },
+  });
+
+  const result = {
+    success: Boolean(products) ? true : false,
+    data: products,
+  };
+
+  return result;
+}
+
 export default db;
 
 /*

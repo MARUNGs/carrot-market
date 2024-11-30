@@ -15,6 +15,7 @@ import { z } from "zod";
 import bcrypt from "bcrypt";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
+import { PrevState } from "@/app/types/interface";
 
 /**
 	비밀번호 체크
@@ -40,18 +41,6 @@ const formSchema = z.object({
   // .min(PASSWORD_MIN_LENGTH),
   // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
 });
-
-interface FormErrors {
-  fieldErrors: {
-    email?: string[];
-    password?: string[];
-  };
-  formErrors?: string[];
-}
-
-interface PrevState extends FormErrors {
-  success?: boolean;
-}
 
 // Server Action
 export async function login(_: PrevState, formData: FormData) {

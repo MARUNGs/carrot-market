@@ -9,6 +9,7 @@ import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
 import { redirect } from "next/navigation";
 import getSession from "@/lib/session";
+import { PrevState } from "@/app/types/interface";
 
 const db = new PrismaClient(); // Prisma Client 초기화
 
@@ -114,22 +115,6 @@ const formSchema = z
     message: "비밀번호와 비밀번호 확인이 서로 일치하지 않습니다.",
     path: ["passwordConfirm"], // 어느 항목의 오류인가?를 설정하는 prop
   });
-
-// 폼 에러 타입 정의
-interface FormErrors {
-  fieldErrors: {
-    username?: string[];
-    email?: string[];
-    password?: string[];
-    passwordConfirm?: string[];
-  };
-  formErrors?: string[];
-}
-
-// 이전 상태 타입 정의
-interface PrevState extends FormErrors {
-  success?: boolean;
-}
 
 // main function
 export async function createAccount(_: PrevState, formData: FormData) {
