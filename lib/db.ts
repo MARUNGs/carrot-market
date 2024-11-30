@@ -2,6 +2,7 @@
 import { IUser } from "@/app/types/ParamsInterface";
 import { IUserResult } from "@/app/types/ReturnInterface";
 import { PrismaClient } from "@prisma/client";
+import { DbResult } from "./common-model";
 
 // Prisma Client 초기화
 const db = new PrismaClient();
@@ -17,12 +18,7 @@ export async function findUser(username: string): Promise<IUserResult> {
     select: { id: true },
   });
 
-  const result = {
-    success: Boolean(user) ? true : false,
-    data: user,
-  };
-
-  return result;
+  return DbResult(user);
 }
 
 /**
@@ -36,12 +32,7 @@ export async function findEmail(email: string): Promise<IUserResult> {
     select: { id: true },
   });
 
-  const result = {
-    success: Boolean(user) ? true : false,
-    data: user,
-  };
-
-  return result;
+  return DbResult(user);
 }
 
 /**
@@ -55,12 +46,23 @@ export async function createUser(data: IUser): Promise<IUserResult> {
     select: { id: true },
   });
 
-  const result = {
-    success: Boolean(createUser) ? true : false,
-    data: createUser,
-  };
+  return DbResult(createUser);
+}
 
-  return result;
+/*************************************************************/
+
+/**
+ * [로그인] DB에서 입력한 이메일을 보유한 유저를 찾는다.
+ * @param email
+ * @returns
+ */
+export async function fineUserPassword(email: string) {
+  const user = await db.user.findUnique({
+    where: { email },
+    select: { id: true, password: true },
+  });
+
+  return DbResult(user);
 }
 
 /*************************************************************/

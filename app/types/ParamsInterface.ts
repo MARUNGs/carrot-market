@@ -4,6 +4,11 @@ export interface IUser {
   password: string;
 }
 
+export interface IResultProps {
+  id: number;
+  password?: string;
+}
+
 // password
 export interface IPasswordProps {
   password: string;

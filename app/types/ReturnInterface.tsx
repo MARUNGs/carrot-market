@@ -6,5 +6,6 @@ export interface IUserResult extends IUser {
   success: boolean;
   data: {
     id: number;
+    password?: string;
   };
 }
