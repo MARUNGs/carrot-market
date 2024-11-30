@@ -4,11 +4,11 @@ async function getProduct() {
   await new Promise((resolve) => setTimeout(resolve, 6000));
 }
 
-export default async function ProductDetail({
-  params: { id },
-}: {
+interface IParams {
   params: { id: string };
-}) {
+}
+
+export default async function ProductDetail({ params: { id } }: IParams) {
   const product = await getProduct();
   console.log(product);
   return <span>detail {id}</span>;
