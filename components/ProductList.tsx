@@ -1,4 +1,5 @@
 import { IProduct } from "@/app/types/ParamsInterface";
+import { formatToWon, formatToTimeAgo } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,9 +22,11 @@ export default function ProductList({ ...props }: IProduct) {
       <div className="flex flex-col gap-1 *:text-white">
         <span className="text-lg">{props.title}</span>
         <span className="text-sm text-neutral-500">
-          {props.created_at.toString()}
+          {formatToTimeAgo(props.created_at.toString())}
         </span>
-        <span className="text-lg font-semibold">{props.price}</span>
+        <span className="text-lg font-semibold">
+          {formatToWon(props.price)}원
+        </span>
       </div>
     </Link>
   );
