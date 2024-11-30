@@ -115,8 +115,24 @@ const formSchema = z
     path: ["passwordConfirm"], // 어느 항목의 오류인가?를 설정하는 prop
   });
 
+// 폼 에러 타입 정의
+interface FormErrors {
+  fieldErrors: {
+    username?: string[];
+    email?: string[];
+    password?: string[];
+    passwordConfirm?: string[];
+  };
+  formErrors?: string[];
+}
+
+// 이전 상태 타입 정의
+interface PrevState extends FormErrors {
+  success?: boolean;
+}
+
 // main function
-export async function createAccount(_: any, formData: FormData) {
+export async function createAccount(_: PrevState, formData: FormData) {
   const data = {
     username: formData.get("username"),
     email: formData.get("email"),

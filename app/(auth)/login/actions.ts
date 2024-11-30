@@ -41,8 +41,20 @@ const formSchema = z.object({
   // .regex(PASSWORD_REGEX, PASSWORD_REGEX_ERROR),
 });
 
+interface FormErrors {
+  fieldErrors: {
+    email?: string[];
+    password?: string[];
+  };
+  formErrors?: string[];
+}
+
+interface PrevState extends FormErrors {
+  success?: boolean;
+}
+
 // Server Action
-export async function login(_: any, formData: FormData) {
+export async function login(_: PrevState, formData: FormData) {
   // Server Action이 이전에 반환했던 값이 prevState로 매핑된다.
 
   const data = {
