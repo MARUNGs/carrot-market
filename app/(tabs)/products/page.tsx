@@ -7,7 +7,7 @@ export default async function Product() {
   const products = await findProducts();
 
   return (
-    <div>
+    <div className="p-5 flex flex-col gap-5">
       {products.success &&
         products.data.map((product: IProduct) => (
           <ProductList key={product.id} {...product} />
