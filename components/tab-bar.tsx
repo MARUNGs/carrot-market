@@ -28,7 +28,8 @@ export default function TabBar() {
         "grid grid-cols-5",
         "border-neutral-600 border-t",
         "px-5 py-3",
-        "*:text-white"
+        "*:text-white",
+        "bg-neutral-800"
       )}`}
     >
       <Link
