@@ -33,26 +33,20 @@ export default async function ProductDetail({ params }: IParams) {
 
   const {
     data: {
-      // id: productId,
+      id: productId,
       photo,
       price,
       title,
       description,
       // created_at,
-      user: {
-        avatar,
-        name: username,
-        // id: findUserId
-      },
+      user: { avatar, name: username, id: findUserId },
     },
   } = product;
 
   // 제품 삭제
   async function deleteProduct() {
     "use server";
-
-    const session = await getSession();
-    await removeProduct(id, session.id); // 상품 삭제
+    await removeProduct(productId, findUserId); // 상품 삭제
     return redirect("/products");
   }
 
@@ -63,7 +57,7 @@ export default async function ProductDetail({ params }: IParams) {
       </div>
 
       <div className="p-5 flex items-center gap-3 border-b border-neutral-700">
-        <div className="size-10 rounded-full">
+        <div className="size-10 rounded-full overflow-hidden">
           {avatar !== null ? (
             <Image src={avatar} alt={username} width={40} height={40} />
           ) : (
