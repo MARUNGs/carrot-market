@@ -13,9 +13,12 @@ interface IProps {
 export default function ProductLists({ initProducts }: IProps) {
   const [products, setProducts] = useState(initProducts.data);
   const [loading, setLoading] = useState(false);
+  const [page, setPage] = useState(0);
+
   const onLoadMoreClick = async () => {
     setLoading(true);
-    const { data: list } = await getMoreProducts(2);
+    const { data: list } = await getMoreProducts(page + 1);
+    setPage((prev) => prev + 1);
     setProducts((prev) => [...prev, ...list]);
     setLoading(false);
   };
