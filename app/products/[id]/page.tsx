@@ -53,7 +53,12 @@ export default async function ProductDetail({ params }: IParams) {
   return (
     <div>
       <div className="relative aspect-square">
-        <Image fill src={`/images/${photo}`} alt={title} />
+        <Image
+          className="object-cover" // 이미지 변형없이 비율 그대로 보여줌
+          fill
+          src={`/images/${photo}`}
+          alt={title}
+        />
       </div>
 
       <div className="p-5 flex items-center gap-3 border-b border-neutral-700">

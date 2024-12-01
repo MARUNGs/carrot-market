@@ -15,6 +15,7 @@ export default function ProductList({ ...props }: IProduct) {
           height={200}
           src={`/images/${props.photo}`}
           alt={props.title}
+          className="object-cover"
           // quality={100} // 이미지 선명도
         />
       </div>
