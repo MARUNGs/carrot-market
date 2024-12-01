@@ -2,7 +2,7 @@
 import { IUser } from "@/app/types/ParamsInterface";
 import { IUserResult } from "@/app/types/ReturnInterface";
 import { PrismaClient } from "@prisma/client";
-import { DbResult } from "./common-model";
+import { ProductListResult, ProductResult, UserResult } from "./common-model";
 
 // Prisma Client 초기화
 const db = new PrismaClient();
@@ -18,7 +18,7 @@ export async function findUser(username: string): Promise<IUserResult> {
     select: { id: true },
   });
 
-  return DbResult(user);
+  return UserResult(user);
 }
 
 /**
@@ -32,7 +32,7 @@ export async function findEmail(email: string): Promise<IUserResult> {
     select: { id: true },
   });
 
-  return DbResult(user);
+  return UserResult(user);
 }
 
 /**
@@ -46,7 +46,7 @@ export async function createUser(data: IUser): Promise<IUserResult> {
     select: { id: true },
   });
 
-  return DbResult(createUser);
+  return UserResult(createUser);
 }
 
 /*************************************************************/
@@ -62,7 +62,7 @@ export async function fineUserPassword(email: string) {
     select: { id: true, password: true },
   });
 
-  return DbResult(user);
+  return UserResult(user);
 }
 
 /*************************************************************/
@@ -71,7 +71,7 @@ export async function fineUserPassword(email: string) {
  * [상품페이지] 상품리스트 조회
  * @returns
  */
-export async function findProducts() {
+export async function findProductList() {
   const products = await db.product.findMany({
     select: {
       id: true,
@@ -82,12 +82,36 @@ export async function findProducts() {
     },
   });
 
-  const result = {
-    success: Boolean(products) ? true : false,
-    data: products,
+  return ProductListResult(products);
+}
+
+/**
+ * [상품페이지] 상품 조회
+ * @param id
+ * @returns
+ */
+export async function findProduct(id: number) {
+  const user = {
+    select: { name: true, avatar: true },
   };
 
-  return result;
+  const product = await db.product.findUnique({
+    where: { id },
+    include: { user }, // 상품 + user의 name, avatar 포함
+  });
+
+  return ProductResult(product);
+}
+
+/**
+ * [상품페이지] 상품 삭제
+ * @param id
+ * @param userId
+ */
+export async function removeProduct(id: number, userId: number) {
+  await db.product.delete({
+    where: { id, userId },
+  });
 }
 
 export default db;

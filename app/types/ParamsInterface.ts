@@ -1,3 +1,7 @@
+export interface IParams {
+  params: { id: string };
+}
+
 export interface IUser {
   name: string;
   email: string;
@@ -7,6 +11,15 @@ export interface IUser {
 export interface IResultProps {
   id: number;
   password?: string;
+}
+
+export interface IProduct {
+  id: number;
+  title: string;
+  price: number;
+  description?: string;
+  photo: string;
+  created_at: Date;
 }
 
 // password
