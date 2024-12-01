@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 export default function ProductList({ ...props }: IProduct) {
-  console.log(props.photo);
   return (
     <Link className="flex gap-5" href={`/products/${props.id}`}>
       <div className="relative size-28 rounded-md overflow-hidden">

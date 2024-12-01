@@ -71,18 +71,39 @@ export async function fineUserPassword(email: string) {
  * [상품페이지] 상품리스트 조회
  * @returns
  */
-export async function findProductList() {
-  const products = await db.product.findMany({
-    select: {
-      id: true,
-      title: true,
-      price: true,
-      created_at: true,
-      photo: true,
-    },
-  });
+export async function findProductList(page: number) {
+  // 첫 로드 시 (init)
+  if (page === 1) {
+    const products = await db.product.findMany({
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        created_at: true,
+        photo: true,
+      },
+      take: 1, // 데이터 1개만 호출
+      orderBy: { created_at: "desc" },
+    });
 
-  return ProductListResult(products);
+    return ProductListResult(products);
+  } else {
+    // Load more 버튼을 눌렀을때
+    const products = await db.product.findMany({
+      select: {
+        id: true,
+        title: true,
+        price: true,
+        created_at: true,
+        photo: true,
+      },
+      skip: 1, // 첫번째 데이터 스킵
+      take: 1, // 데이터 1개만 호출
+      orderBy: { created_at: "desc" },
+    });
+
+    return ProductListResult(products);
+  }
 }
 
 /**
