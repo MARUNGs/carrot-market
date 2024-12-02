@@ -5,7 +5,6 @@ import ProductList from "./ProductList";
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import { getMoreProducts } from "@/app/(tabs)/products/server";
-import { threadId } from "worker_threads";
 
 interface IProps {
   initProducts: IProductListResult;
