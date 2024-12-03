@@ -74,9 +74,11 @@ export default function ProductLists({ initProducts }: IProps) {
       {!lastPage ? (
         <span
           ref={trigger}
-          style={{
-            marginTop: `${(page + 1) * 300}vh`, // 실제 만들때 이렇게 구현 안함. 지금은 데이터가 없어서 임시로.
-          }}
+          style={
+            {
+              // marginTop: `${(page + 1) * 300}vh`, // 실제 만들때 이렇게 구현 안함. 지금은 데이터가 없어서 임시로.
+            }
+          }
           className={`${clsx(
             "mb-96",
             "text-sm font-semibold",

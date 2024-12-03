@@ -4,14 +4,33 @@ import Input from "@/components/Input";
 import { PhotoIcon } from "@heroicons/react/24/solid";
 import clsx from "clsx";
 import { useState } from "react";
-import { uploadProduct } from "./actions";
+import { uploadProduct, UploadProductState } from "./actions";
 import { useFormState } from "react-dom";
 
 export default function AddProduct() {
   const [preview, setPreview] = useState("");
-  const [state, dispatch] = useFormState(uploadProduct, null);
 
-  console.log(state);
+  /**
+   * form의 action을 가로채서 처리
+   * @param _
+   * @param formData
+   */
+  const intercepAction = async (_: UploadProductState, formData: FormData) => {
+    // 파일 업로드(cloudflare - 근데 난 사용하지 않음, ./public/images에 저장됨)
+    const photo = formData.get("photo");
+    if (!photo) return;
+
+    // formData의 photo를 교체(File -> string)
+    /*
+      이 과정에서 CloudFlare를 사용해서 업로드된 파일의 URL을 formData에 세팅하는 작업이 있었다.
+      근데 난 사용하지 않음. ;;
+    */
+
+    // call uploadProduct action
+    return uploadProduct(_, formData);
+  };
+
+  const [state, dispatch] = useFormState(intercepAction, null);
 
   // 이미지 미리보기
   const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +42,7 @@ export default function AddProduct() {
     if (!files) return;
 
     const file = files[0];
+
     // 이미지를 업로드했는지 확인
     if (!file.type.startsWith("image/")) return;
 

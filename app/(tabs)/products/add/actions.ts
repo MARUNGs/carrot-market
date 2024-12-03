@@ -22,7 +22,7 @@ const formSchema = z.object({
   }),
 });
 
-interface UploadProductState {
+export interface UploadProductState {
   photo?: string[];
   title?: string[];
   price?: string[];
@@ -37,7 +37,7 @@ interface UploadProductState {
  */
 export async function uploadProduct(_: UploadProductState, formData: FormData) {
   const data = {
-    photo: formData.get("photo"),
+    photo: formData.get("photo"), // string으로 넘어오지만 file 형식이므로 intecept 하여 처리해야함.
     title: formData.get("title"),
     price: formData.get("price"),
     description: formData.get("description"),
@@ -52,10 +52,11 @@ export async function uploadProduct(_: UploadProductState, formData: FormData) {
       Buffer.from(photoData)
     );
 
-    data.photo = `/${data.photo.name}`;
+    data.photo = `${data.photo.name}`;
   }
 
   const result = formSchema.safeParse(data);
+
   if (!result.success) {
     return result.error.flatten().fieldErrors;
   } else {
