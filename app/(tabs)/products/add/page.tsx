@@ -15,7 +15,7 @@ export default function AddProduct() {
    * @param _
    * @param formData
    */
-  const intercepAction = async (_: UploadProductState, formData: FormData) => {
+  const interceptAction = async (_: UploadProductState, formData: FormData) => {
     // 파일 업로드(cloudflare - 근데 난 사용하지 않음, ./public/images에 저장됨)
     const photo = formData.get("photo");
     if (!photo) return;
@@ -30,7 +30,7 @@ export default function AddProduct() {
     return uploadProduct(_, formData);
   };
 
-  const [state, dispatch] = useFormState(intercepAction, null);
+  const [state, dispatch] = useFormState(interceptAction, null);
 
   // 이미지 미리보기
   const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
