@@ -17,6 +17,7 @@ export default function AddProduct() {
     register,
     handleSubmit,
     setValue, // form 데이터를 수동설정할 수 있음.
+    setError,
     formState: { errors },
   } = useForm<ProductType>({
     resolver: zodResolver(productSchema),
@@ -44,7 +45,12 @@ export default function AddProduct() {
     formData.append("price", data.price + "");
     formData.append("description", data.description);
 
-    return uploadProduct(formData); // call uploadProduct action
+    const errors = await uploadProduct(formData); // call uploadProduct action
+
+    // 수동으로 에러 설정이 가능하다.
+    if (errors) {
+      // setError();
+    }
   });
 
   /**
