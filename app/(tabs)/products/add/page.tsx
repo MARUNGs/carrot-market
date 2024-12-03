@@ -80,7 +80,7 @@ export default function AddProduct() {
     // 즉, 파일이 브라우저의 메모리에 업로드되었고 페이지를 새로고침할때까지 사용할 수 있다.
     setPreview(URL.createObjectURL(file));
     setPhoto(file);
-    setValue("photo", `./public/images/${file.name}`);
+    setValue("photo", `./public/images/${file.name}`); // 원래는 CloudFlare에서 제공되는 URL을 삽입해야 함.
   };
 
   return (
