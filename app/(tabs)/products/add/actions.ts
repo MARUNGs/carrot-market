@@ -1,26 +1,10 @@
 "use server";
-import { z } from "zod";
-import fs from "fs/promises"; // file system async-await 버전
+
+import fs from "fs/promises"; // xfile system async-await 버전
 import db from "@/lib/db";
 import getSession from "@/lib/session";
 import { redirect } from "next/navigation";
-
-const formSchema = z.object({
-  photo: z.string({
-    required_error: "사진을 등록해주세요.",
-  }),
-  title: z.string({
-    required_error: "상품명을 입력해주세요.",
-  }),
-  description: z
-    .string({
-      required_error: "상품설명을 입력해주세요.",
-    })
-    .min(10),
-  price: z.coerce.number({
-    required_error: "가격을 입력해주세요.",
-  }),
-});
+import { productSchema } from "./schema";
 
 export interface UploadProductState {
   photo?: string[];
@@ -32,10 +16,10 @@ export interface UploadProductState {
 }
 
 /**
- * 상품 등록
+ * 상품 등록 :: React Hook Form에서 유효성검증을 가로채고 있어서 파라미터는 유효성검증이 완료된 formData만 들어오게 된다.
  * @param formData
  */
-export async function uploadProduct(_: UploadProductState, formData: FormData) {
+export async function uploadProduct(formData: FormData) {
   const data = {
     photo: formData.get("photo"), // string으로 넘어오지만 file 형식이므로 intecept 하여 처리해야함.
     title: formData.get("title"),
@@ -55,7 +39,7 @@ export async function uploadProduct(_: UploadProductState, formData: FormData) {
     data.photo = `${data.photo.name}`;
   }
 
-  const result = formSchema.safeParse(data);
+  const result = productSchema.safeParse(data);
 
   if (!result.success) {
     return result.error.flatten().fieldErrors;
