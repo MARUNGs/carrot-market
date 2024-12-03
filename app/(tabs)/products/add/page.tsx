@@ -5,9 +5,13 @@ import { PhotoIcon } from "@heroicons/react/24/solid";
 import clsx from "clsx";
 import { useState } from "react";
 import { uploadProduct } from "./actions";
+import { useFormState } from "react-dom";
 
 export default function AddProduct() {
   const [preview, setPreview] = useState("");
+  const [state, dispatch] = useFormState(uploadProduct, null);
+
+  console.log(state);
 
   // 이미지 미리보기
   const onImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -33,7 +37,7 @@ export default function AddProduct() {
 
   return (
     <div>
-      <form action={uploadProduct} className="flex flex-col gap-5 p-5">
+      <form action={dispatch} className="flex flex-col gap-5 p-5">
         <label
           htmlFor="photo"
           className={`${clsx(
@@ -50,6 +54,7 @@ export default function AddProduct() {
               <PhotoIcon className="w-20" />
               <div className="text-neutral-400 text-sm">
                 사진을 추가해주세요.
+                <span className="text-red-500">{state?.photo}</span>
               </div>
             </>
           ) : null}
@@ -62,9 +67,27 @@ export default function AddProduct() {
           className="hidden"
         />
 
-        <Input type="text" name="title" required placeholder="제목" />
-        <Input type="number" name="price" required placeholder="가격" />
-        <Input type="text" name="description" required placeholder="설명" />
+        <Input
+          type="text"
+          name="title"
+          required
+          placeholder="제목"
+          errors={state?.title}
+        />
+        <Input
+          type="number"
+          name="price"
+          required
+          placeholder="가격"
+          errors={state?.price}
+        />
+        <Input
+          type="text"
+          name="description"
+          required
+          placeholder="설명"
+          errors={state?.description}
+        />
         <FormButton text="작성 완료" />
       </form>
     </div>
