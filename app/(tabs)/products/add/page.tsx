@@ -28,7 +28,6 @@ export default function AddProduct() {
 
     // 업로드파일 URL을 생성해줌. 업로드한 파일의 메모리에 우리의 브라우저가 access할 수 있게 되어서 URL 호출이 가능해짐.
     // 즉, 파일이 브라우저의 메모리에 업로드되었고 페이지를 새로고침할때까지 사용할 수 있다.
-
     setPreview(URL.createObjectURL(file));
   };
 
