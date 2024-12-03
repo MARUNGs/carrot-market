@@ -27,7 +27,7 @@ export async function middleware(request: NextRequest) {
 
   // 이미 로그인한 상태이므로 publicOnlyUrls로 갈수없게 막아야 한다.
   if (session.id && exists) {
-    return NextResponse.redirect(new URL("/products", url));
+    return NextResponse.redirect(new URL("/home", url));
   }
 }
 

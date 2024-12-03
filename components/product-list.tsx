@@ -4,7 +4,7 @@ import { IProductListResult } from "@/app/types/ReturnInterface";
 import ProductList from "./ProductList";
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
-import { getMoreProducts } from "@/app/(tabs)/products/server";
+import { getMoreProducts } from "@/app/(tabs)/home/server";
 
 interface IProps {
   initProducts: IProductListResult;
