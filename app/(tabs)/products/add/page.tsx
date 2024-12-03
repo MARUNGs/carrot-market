@@ -27,8 +27,6 @@ export default function AddProduct() {
    * 이 때, useForm의 handleSubmit을 사용하여 처리하게 되고
    * 파라미터는 prevState, formData가 아닌,
    * 유효성 검증을 마치고 반환된 데이터가 들어오게 된다.
-   * @param _
-   * @param formData
    */
   const onSubmit = handleSubmit(async (data: ProductType) => {
     // const photo = formData.get("photo"); // 파일 업로드(cloudflare - 근데 난 사용하지 않음, ./public/images에 저장됨)
