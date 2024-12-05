@@ -3,7 +3,7 @@ import { findProductList /*findProductListInit */ } from "@/lib/db";
 import { PlusIcon } from "@heroicons/react/24/solid";
 import { Prisma } from "@prisma/client";
 import clsx from "clsx";
-import { unstable_cache as nextCache } from "next/cache";
+import { unstable_cache as nextCache, revalidatePath } from "next/cache";
 import Link from "next/link";
 
 /**
@@ -18,7 +18,7 @@ const getCachedProducts = nextCache(findProductList, ["home-products"], {
   // [4] findProductList 함수가 호출되는 순간부터 시간이 흐른다.
   //     유저가 60초 이내에 데이터를 호출하면 cache에 저장된 데이터를 전달해줄 것이고
   //     60초가 지나면 다시 findProductList 함수를 호출하여 데이터를 전달하게 된다.
-  revalidate: 60, // 60초 기준
+  // revalidate: 60, // 60초 기준
 });
 
 export const metadata = {
@@ -34,9 +34,20 @@ export default async function Product() {
   // [1] DB 조회를 NextJS Cache에게 위임했다.
   const initProducts = await getCachedProducts(0);
 
+  // [5] 캐시 데이터를 갱신하는 함수
+  const revalidate = async () => {
+    "use server";
+    revalidatePath("/products");
+  };
+
   return (
     <div>
       <ProductLists initProducts={initProducts} />
+
+      {/* revalidatePath 예제를 위한 form */}
+      <form action={revalidate}>
+        <button>Revalidate</button>
+      </form>
       <Link
         href="/products/add"
         className={`${clsx(

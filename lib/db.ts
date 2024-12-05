@@ -92,6 +92,7 @@ export async function findProductListInit() {
  * @returns
  */
 export async function findProductList(page: number) {
+  console.log("-- 상품리스트를 호출하고 있어요 ... --");
   const products = await db.product.findMany({
     select: {
       id: true,
