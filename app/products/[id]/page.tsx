@@ -9,6 +9,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 
+// paramater로 넘어온 id 값을 metadata에 넣어줌.
+export async function generateMetadata({ params }: IParams) {
+  const product = await findProduct(Number(params.id));
+  return { title: `${product.data.title}` };
+}
+
 /**
  * 현재 사용자가 상품 게시글 작성자인지 확인하기 위한 확인
  * @param id

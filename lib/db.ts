@@ -80,7 +80,7 @@ export async function findProductListInit() {
       created_at: true,
       photo: true,
     },
-    take: 1, // 데이터 1개만 호출
+    // take: 1, // 데이터 1개만 호출, Next Cache 를 배루기 위해 임시 주석처리 하였음.
     orderBy: { created_at: "desc" },
   });
 

@@ -17,7 +17,6 @@ export default function AddProduct() {
     register,
     handleSubmit,
     setValue, // form 데이터를 수동설정할 수 있음.
-    setError,
     formState: { errors },
   } = useForm<ProductType>({
     resolver: zodResolver(productSchema),

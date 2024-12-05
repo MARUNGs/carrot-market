@@ -3,7 +3,7 @@ import { IProduct } from "@/app/types/ParamsInterface";
 import { IProductListResult } from "@/app/types/ReturnInterface";
 import ProductList from "./ProductList";
 import { useEffect, useRef, useState } from "react";
-import clsx from "clsx";
+// import clsx from "clsx";
 import { getMoreProducts } from "@/app/(tabs)/products/server";
 
 interface IProps {
@@ -12,9 +12,9 @@ interface IProps {
 
 export default function ProductLists({ initProducts }: IProps) {
   const [products, setProducts] = useState(initProducts.data);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [page, setPage] = useState(0);
-  const [lastPage, setLastPage] = useState(false);
+  // const [lastPage, setLastPage] = useState(false);
   const trigger = useRef<HTMLSpanElement>(null);
 
   // 무한스크롤 trigger 감지하기
@@ -32,16 +32,16 @@ export default function ProductLists({ initProducts }: IProps) {
         if (element.isIntersecting && trigger.current) {
           // observer를 잠시 멈추고 DB에서 현재 리스트 다음의 새로운 다음 상품리스트를 조회한다.
           observer.unobserve(trigger.current);
-          setLoading(true);
+          // setLoading(true);
           const { data: list } = await getMoreProducts(page + 1);
 
           // 데이터가 존재할때만 페이지 번호를 증가시킨다.
           if (list.length !== 0) {
             setPage((prev) => prev + 1);
             setProducts((prev) => [...prev, ...list]);
-            setLoading(false);
+            // setLoading(false);
           } else {
-            setLastPage(true);
+            // setLastPage(true);
           }
         }
       },
@@ -71,7 +71,8 @@ export default function ProductLists({ initProducts }: IProps) {
           <ProductList key={product.id} {...product} />
         ))}
 
-      {!lastPage ? (
+      {/* NextJS Cache 를 배루기 위해 임시 주석처리 하였음
+      {!lastPage ? ( 
         <span
           ref={trigger}
           style={
@@ -88,7 +89,7 @@ export default function ProductLists({ initProducts }: IProps) {
         >
           {loading ? "Loading ..." : "Load more"}
         </span>
-      ) : null}
+      ) : null} */}
     </div>
   );
 }
