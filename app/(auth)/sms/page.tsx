@@ -27,7 +27,7 @@ export default function SmsLogin() {
               type="number"
               placeholder="verification code"
               required
-              errors={state.error?.formErrors}
+              errors={state.errors?.token}
             />
           ) : null}
           <Button

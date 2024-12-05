@@ -59,6 +59,13 @@ async function getToken(): Promise<string> {
   return exists ? getToken() : token;
 }
 
+interface ActionState {
+  token: boolean;
+  errors?: {
+    token?: string[];
+  };
+}
+
 export async function smsLogin(prevState: ActionState, formData: FormData) {
   const phone = formData.get("phone");
   const token = formData.get("token");
@@ -70,7 +77,7 @@ export async function smsLogin(prevState: ActionState, formData: FormData) {
     if (!result.success) {
       return {
         token: false,
-        error: result.error.flatten(),
+        error: result.error.flatten().fieldErrors,
       };
     } else {
       // 전화번호 유효성 검증에 성공했다면 다음을 수행한다.
