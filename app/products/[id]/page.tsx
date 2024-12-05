@@ -2,10 +2,11 @@
 import { IParams } from "@/app/types/ParamsInterface";
 import {
   findProduct,
+  findProductList,
   getProdictTitle,
   // removeProduct
 } from "@/lib/db";
-import getSession from "@/lib/session";
+// import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import clsx from "clsx";
@@ -40,14 +41,15 @@ export async function generateMetadata({ params }: IParams) {
 
 /**
  * 현재 사용자가 상품 게시글 작성자인지 확인하기 위한 확인
+ * 20241205 수정. dynamic -> static 페이지로 변경하기 위한 소스 변경
  * @param id
  * @returns
  */
 async function getIsOwner(id: number): Promise<boolean> {
-  const session = await getSession();
-  if (session.id) {
-    return session.id === id;
-  } else return false;
+  console.log(id);
+  // const session = await getSession(); // session이 있으면 static이 될 수 없으므로 주석처리함.
+  // if (session.id) return session.id === id;
+  return false;
 }
 
 export default async function ProductDetail({ params }: IParams) {
@@ -160,4 +162,25 @@ export default async function ProductDetail({ params }: IParams) {
       </div>
     </div>
   );
+}
+
+/**
+ * dynamicParams = true :: 미리 생성되지 않은 페이지들이 dynamic 페이지들로 간주된다.
+ *  ㄴ dynamic 페이지들은 render되며 DB는 호출된다.
+ * dynamicParams = false :: 미리 생성되지 않은 페이지들은 notFound 오류를 반환한다.
+ *  ㄴ 즉, 오직 build 할 때 미리 생성된 페이지들만 찾을 수 있다.
+ */
+export const dynamicParams = true;
+
+/**
+ * dynamic 페이지를 static 페이지로 변경하는 기능
+ * "이 페이지는 이런 종류의 parameter들을 받을 수 있어. 이것들이 가능한 것들이야."
+ * @returns array
+ */
+export async function generateStaticParams() {
+  const { data } = await findProductList(0);
+
+  // params에 대한 정보를 반환해야 함. string 자료형으로 전달받았으므로 동일한 자료형으로 리턴할 것.
+  const result = data.map(({ id }) => ({ id: id.toString() }));
+  return result; // must have toreturn array
 }
