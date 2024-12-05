@@ -110,11 +110,28 @@ export async function findProductList(page: number) {
 }
 
 /**
+ * 헤더에 장식할 title 조회
+ * @param id
+ */
+export async function getProdictTitle(id: number) {
+  console.log("-- title --");
+  const products = await db.product.findUnique({
+    where: { id },
+    select: {
+      title: true,
+    },
+  });
+
+  return products;
+}
+
+/**
  * [상품페이지] 상품 조회
  * @param id
  * @returns
  */
 export async function findProduct(id: number) {
+  console.log("-- product detail --");
   const user = {
     select: { name: true, avatar: true },
   };

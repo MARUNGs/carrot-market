@@ -6,6 +6,11 @@ import clsx from "clsx";
 import { unstable_cache as nextCache, revalidatePath } from "next/cache";
 import Link from "next/link";
 
+// [운영모드일때 작동] NextJS에게 해당 페이지를 강제로 dynamic 페이지라고 인식하게 만듬.
+// export const dynamic = "force-dynamic";
+// [운영모드일때 작동] Route에 대해서도 설정할 수 있다.
+export const revalidate = 60;
+
 /**
  * NextJS Cache 프로세스 순서를 쫓아가보자.
  */
@@ -34,7 +39,7 @@ export default async function Product() {
   // [1] DB 조회를 NextJS Cache에게 위임했다.
   const initProducts = await getCachedProducts(0);
 
-  // [5] 캐시 데이터를 갱신하는 함수
+  // [5] 캐시 데이터를 갱신하는 함수 :: 예제확인할거면 주석해제할 것
   const revalidate = async () => {
     "use server";
     revalidatePath("/products");
@@ -44,7 +49,7 @@ export default async function Product() {
     <div>
       <ProductLists initProducts={initProducts} />
 
-      {/* revalidatePath 예제를 위한 form */}
+      {/* revalidatePath 예제를 위한 form :: 예제확인할거면 주석해제할 것. */}
       <form action={revalidate}>
         <button>Revalidate</button>
       </form>
