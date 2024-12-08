@@ -1,15 +1,11 @@
 import { findLikeStatus, findPost } from "@/lib/db";
 import { formatToTimeAgo } from "@/lib/utils";
-import {
-  EyeIcon,
-  HandThumbUpIcon as HandThumbUpIconSolid,
-} from "@heroicons/react/24/solid";
-import { HandThumbUpIcon as HandThumbUpIconOutline } from "@heroicons/react/24/outline";
+import { EyeIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { dislikePost, getUserId, likePost } from "../actions";
-import { unstable_cache as nextCache, revalidateTag } from "next/cache";
-import clsx from "clsx";
+import { getUserId } from "./actions";
+import { unstable_cache as nextCache } from "next/cache";
+import LikeButton from "@/components/like-button";
 
 interface PostDetailProps {
   params: { id: string };
@@ -43,22 +39,6 @@ export default async function PostDetail({ params }: PostDetailProps) {
   const post = await getCachedPostStatus(postId);
   if (!post) return notFound();
 
-  // 좋아요 기능
-  async function likeAction() {
-    "use server";
-
-    // Q. 서버에서 mutation 실행완료 되기 전에 유저의 UI를 업데이트할 수 있을까?
-    await new Promise((resolve) => setTimeout(resolve, 5000)); // 강제로 5초 딜레이 부여
-
-    const result = await findLikeStatus(postId, userId);
-
-    if (result.isLiked) await dislikePost(postId);
-    else await likePost(postId);
-
-    // tags에 특정 id를 부여하여 그 like id에 대한 cache를 관리할 수 있다.
-    revalidateTag(`like-status-${postId}`);
-  }
-
   const { isLiked, likeCount } = await getCachedLikeStatus(postId);
 
   return (
@@ -87,26 +67,12 @@ export default async function PostDetail({ params }: PostDetailProps) {
           <span>👀 {post.views}</span>
         </div>
 
-        <form action={likeAction}>
-          <button
-            className={`${clsx(
-              "flex items-center gap-2 text-neutral-100 text-sm border border-neutral-100 rounded-full p-2 transition-colors",
-              isLiked ? "bg-orange-500 text-white" : "hover:bg-neutral-800"
-            )}`}
-          >
-            {isLiked ? (
-              <HandThumbUpIconSolid className="size-5" />
-            ) : (
-              <HandThumbUpIconOutline className="size-5 " />
-            )}
-
-            {isLiked ? (
-              <span>{likeCount}</span>
-            ) : (
-              <span>공감하기 ({likeCount})</span>
-            )}
-          </button>
-        </form>
+        <LikeButton
+          isLiked={isLiked}
+          likeCount={likeCount}
+          postId={Number(postId)}
+          userId={Number(userId)}
+        />
       </div>
     </div>
   );

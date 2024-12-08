@@ -213,6 +213,7 @@ export async function findPost(id: number) {
 
     return post;
   } catch (e) {
+    console.log(`error :: ${e}`);
     return null;
   }
 }
@@ -232,7 +233,9 @@ export async function addLikePost(postId: number, sessionId: number) {
         postId,
       },
     });
-  } catch (e) {}
+  } catch (e) {
+    console.log(`error :: ${e}`);
+  }
 }
 
 /**
@@ -250,7 +253,9 @@ export async function removeLikePost(postId: number, sessionId: number) {
         },
       },
     });
-  } catch (e) {}
+  } catch (e) {
+    console.log(`error :: ${e}`);
+  }
 }
 
 /**

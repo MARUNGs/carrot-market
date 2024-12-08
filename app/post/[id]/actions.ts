@@ -2,6 +2,18 @@
 
 import { addLikePost, findLikeStatus, removeLikePost } from "@/lib/db";
 import getSession from "@/lib/session";
+import { revalidateTag } from "next/cache";
+
+// 좋아요 기능
+export async function likeAction(postId: number, userId: number) {
+  const result = await findLikeStatus(postId, userId);
+
+  if (result.isLiked) await dislikePost(postId);
+  else await likePost(postId);
+
+  // tags에 특정 id를 부여하여 그 like id에 대한 cache를 관리할 수 있다.
+  revalidateTag(`like-status-${postId}`);
+}
 
 /**
  * 현재 로그인한 유저의 id를 조회한다. :: nextJS cache와 session을 같이 사용할 수 없어서 별도로 조회처리함.
