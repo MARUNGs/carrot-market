@@ -1,18 +1,27 @@
 "use server";
 
-import { addLikePost, findLike, removeLikePost } from "@/lib/db";
+import { addLikePost, findLikeStatus, removeLikePost } from "@/lib/db";
 import getSession from "@/lib/session";
+
+/**
+ * 현재 로그인한 유저의 id를 조회한다. :: nextJS cache와 session을 같이 사용할 수 없어서 별도로 조회처리함.
+ * @returns
+ */
+export async function getUserId() {
+  const session = await getSession();
+  return session?.id;
+}
 
 /**
  * 좋아요 조회 :: 현재 로그인한 유저가 postId에 좋아요를 눌렀는지 조회한다.
  * @param postId
  * @returns
  */
-export async function getLike(postId: number) {
+export async function getLikeStatus(postId: number) {
   const session = await getSession();
   if (!session?.id) return null;
 
-  const result = await findLike(postId, session.id);
+  const result = await findLikeStatus(postId, session.id);
   return result;
 }
 

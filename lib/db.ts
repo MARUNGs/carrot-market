@@ -206,7 +206,6 @@ export async function findPost(id: number) {
         _count: {
           select: {
             comments: true,
-            likes: true,
           },
         },
       },
@@ -260,12 +259,16 @@ export async function removeLikePost(postId: number, sessionId: number) {
  * @param sessionId
  * @returns
  */
-export async function findLike(postId: number, sessionId: number) {
+export async function findLikeStatus(postId: number, sessionId: number) {
   const like = await db.like.findUnique({
     where: { id: { userId: sessionId, postId } },
   });
 
-  return Boolean(like);
+  const likeCount = await db.like.count({
+    where: { postId },
+  });
+
+  return { likeCount, isLiked: Boolean(like) };
 }
 
 export default db;
