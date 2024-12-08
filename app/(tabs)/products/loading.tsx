@@ -6,7 +6,7 @@ export default async function Loading() {
   return (
     <div className="p-5 animate-pulse flex flex-col gap-5">
       {[...Array(10)].map((_, i) => (
-        <Skeleton key={i} />
+        <Skeleton key={i} tabNm="products" />
       ))}
     </div>
   );

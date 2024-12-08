@@ -1,11 +1,8 @@
 // Prisma Client 호출
 import { IUser } from "@/app/types/ParamsInterface";
 import { IUserResult } from "@/app/types/ReturnInterface";
-import { PrismaClient } from "@prisma/client";
 import { ProductListResult, ProductResult, UserResult } from "./common-model";
-
-// Prisma Client 초기화
-const db = new PrismaClient();
+import db from "./prisma-client";
 
 /**
  * [회원가입] username 조회
@@ -153,6 +150,31 @@ export async function removeProduct(id: number, userId: number) {
   await db.product.delete({
     where: { id, userId },
   });
+}
+
+/**
+ * [Life페이지] 게시글 조회
+ * @returns
+ */
+export async function getPosts() {
+  const posts = await db.post.findMany({
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      views: true,
+      created_at: true,
+      _count: {
+        // relation으로 연결된 정보를 카운트한다.
+        select: {
+          comments: true,
+          likes: true,
+        },
+      },
+    },
+  });
+
+  return posts;
 }
 
 export default db;

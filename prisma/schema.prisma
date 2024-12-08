@@ -18,8 +18,11 @@ model User {
   avatar     String?    @default("https://cdn-icons-png.flaticon.com/512/17561/17561566.png") // 깃허브 계정의 이미지
   created_at DateTime   @default(now())
   updated_at DateTime   @updatedAt // @updatedAt: 사용자가 수정될때마다 수정시간을 부여해줄 것임.
-  SMSToken   SMSToken[]
-  Product    Product[]
+  tokens     SMSToken[]
+  products   Product[]
+  posts      Post[]
+  comments   Comment[]
+  likes      Like[]
 }
 
 // 사용자 - 토큰 연결 필요(phone으로 토큰값을 전달을 주고받아야 하기 때문)
@@ -44,6 +47,46 @@ model Product {
   photo       String // image는 클라우드에 업로드하고 url string을 저장할 것임.
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
-  user        User     @relation(fields: [userId], references: [id])
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
+}
+
+// 게시글
+model Post {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  views       Int       @default(0) // 조회수
+  created_at  DateTime  @default(now())
+  updated_at  DateTime  @updatedAt
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      Int
+  comments    Comment[]
+  likes       Like[]
+}
+
+// 댓글 - User, Post 연결
+model Comment {
+  id         Int      @id @default(autoincrement())
+  payload    String // 댓글 내용
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     Int
+}
+
+// 좋아요
+model Like {
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId     Int
+  post       Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId     Int
+
+  // composite ID :: userId + postId unique key 설정
+  // user는 하나의 post에 좋아요를 1번만 누를 수 있다.
+  @@id(name: "id", fields: [userId, postId])
 }
