@@ -1,4 +1,4 @@
-import { getPosts } from "@/lib/db";
+import { findPosts } from "@/lib/db";
 import { formatToTimeAgo } from "@/lib/utils";
 import {
   ChatBubbleBottomCenterIcon,
@@ -12,7 +12,7 @@ export const metadata = {
 };
 
 async function Life() {
-  const posts = await getPosts();
+  const posts = await findPosts();
   console.log(posts);
 
   return (
@@ -20,7 +20,7 @@ async function Life() {
       {posts.map((post) => (
         <Link
           key={post.id}
-          href={`/posts/${post.id}`}
+          href={`/post/${post.id}`}
           className={`${clsx(
             "pb-5 mb-5",
             "border-b border-neutral-500",

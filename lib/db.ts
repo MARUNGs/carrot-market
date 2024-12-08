@@ -156,7 +156,7 @@ export async function removeProduct(id: number, userId: number) {
  * [Life페이지] 게시글 조회
  * @returns
  */
-export async function getPosts() {
+export async function findPosts() {
   const posts = await db.post.findMany({
     select: {
       id: true,
@@ -175,6 +175,97 @@ export async function getPosts() {
   });
 
   return posts;
+}
+
+/**
+ * [Life페이지] 게시글 조회
+ * 게시글을 조회한다는 것은 조회수가 증가한다는 것.
+ * 게시글 조회와 동시에 게시글 수정을 작업한다. :: update 쿼리 사용
+ * @param id
+ * @returns
+ */
+export async function findPost(id: number) {
+  // update method 단점 :: update할 데이터를 찾지 못할 경우 error 발생한다.
+  // 따라서, try - catch 구문을 사용해야 한다.
+  try {
+    const post = await db.post.update({
+      where: { id },
+      data: {
+        views: {
+          increment: 1, // 조회수 1 증가
+        },
+      },
+      include: {
+        // user 정보, 댓글 및 좋아요 수 또한 포함시켜줘
+        user: {
+          select: {
+            name: true,
+            avatar: true,
+          },
+        },
+        _count: {
+          select: {
+            comments: true,
+            likes: true,
+          },
+        },
+      },
+    });
+
+    return post;
+  } catch (e) {
+    return null;
+  }
+}
+
+/**
+ * 좋아요 추가 :: 현재 로그인한 유저가 postId에 좋아요를 누른다.
+ * 단, 동일한 postId에 대해 2번이상 좋아요를 누르는 것을 방지한다. try-catch
+ * @param postId
+ * @param sessionId
+ */
+export async function addLikePost(postId: number, sessionId: number) {
+  try {
+    await db.like.create({
+      data: {
+        // composite ID를 활용하여 좋아요 추가
+        userId: sessionId,
+        postId,
+      },
+    });
+  } catch (e) {}
+}
+
+/**
+ * 좋아요 삭제 :: 현재 로그인한 유저가 postId에 누른 좋아요를 삭제한다.
+ * @param postId
+ * @param sessionId
+ */
+export async function removeLikePost(postId: number, sessionId: number) {
+  try {
+    await db.like.delete({
+      where: {
+        id: {
+          userId: sessionId,
+          postId,
+        },
+      },
+    });
+  } catch (e) {}
+}
+
+/**
+ * 좋아요 조회 :: 현재 로그인한 유저가 postId에 좋아요를 눌렀는지 조회한다.
+ * @param postId
+ * @param sessionId
+ * @returns
+ */
+export async function findLike(postId: number, sessionId: number) {
+  const like = await db.like.findUnique({
+    where: { id: { userId: sessionId, postId } },
+  });
+
+  return Boolean(like);
 }
 
 export default db;
