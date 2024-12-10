@@ -28,7 +28,8 @@ export default function LikeButton({
   //    반환값: 새로운 state
   const [state, reducerFn] = useOptimistic(
     { isLiked, likeCount },
-    ({ isLiked, likeCount }, payload) => {
+    ({ isLiked, likeCount }, payload: void) => {
+      console.log("[like button]payload", payload);
       return {
         isLiked: !isLiked,
         likeCount: isLiked ? --likeCount : ++likeCount,
