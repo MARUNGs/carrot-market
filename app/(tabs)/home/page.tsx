@@ -47,6 +47,8 @@ export default async function Product() {
 
   return (
     <div>
+      <Link href={`/home/recent`}>recent products</Link>
+
       <ProductLists initProducts={initProducts} />
 
       {/* revalidatePath 예제를 위한 form :: 예제확인할거면 주석해제할 것. */}

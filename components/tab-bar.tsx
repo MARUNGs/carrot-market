@@ -33,7 +33,7 @@ export default function TabBar() {
       )}`}
     >
       <Link
-        href="/products"
+        href="/home"
         className={`${clsx("flex flex-col items-center gap-px")}`}
       >
         {pathname === "/pathname" ? (
