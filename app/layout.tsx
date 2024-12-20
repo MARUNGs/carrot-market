@@ -14,20 +14,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-  // Parallel Routes
-  potato,
-}: Readonly<{
+}: // Parallel Routes
+// potato,
+Readonly<{
   children: React.ReactNode;
-  potato?: React.ReactNode; // potato의 타입을 정의
+  // potato?: React.ReactNode; // potato의 타입을 정의
 }>) {
-  console.log(potato);
-
   return (
     <html lang="en">
       <body
         className={`${inter.className} bg-neutral-900 text-white max-w-screen-sm mx-auto`}
       >
-        {potato}
+        {/* {potato} */}
         {children}
       </body>
     </html>
